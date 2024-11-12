@@ -176,9 +176,158 @@ GCC compiles a C/C++ program into executable in 4 steps as shown in the above di
    > ld -o hello.exe hello.o ...libraries...  ??
    ```
 
-##### 
+ #### 2.5 GCC 总结
 
+![img](D:\OfficeSpace\MarkdownNotes\assets\1904416-20200519144730743-2017704173.png)
+
+![img](D:\OfficeSpace\MarkdownNotes\assets\1904416-20200519145056555-1317590311.png)
+
+[【gcc与g++】：联系、区别和命令 - Chen沉尘 - 博客园](https://www.cnblogs.com/chen-cs/p/12918133.html) 
+
+
+
+ ### 3. Compile/Link a C++ Program  
+
+​	gcc 编译 c语言文件； 	g++编译 c++语言文件， 使用方法与gcc一样。
+
+
+
+```c++
+// hello.cpp
+#include <iostream>
+using namespace std;
  
+int main() {
+   cout << "Hello, world!" << endl;
+   return 0;
+}
+```
+
+
+
+You need to use **g++** to compile C++ program, as follows. We use the **-o** option to specify the output file name.
+
+```cmd
+// (Windows) In CMD shell
+> g++ -o hello.exe hello.cpp
+   // Compile and link source hello.cpp into executable hello.exe
+> hello
+   // Execute under CMD shell
+```
+
+##### More GCC Compiler Options
+
+A few commonly-used GCC compiler options are:
+
+```cmd
+g++ -Wall -g -o Hello.exe Hello.cpp
+
+```
+
+- `-o`: specifies the output executable filename.
+- `-Wall`: prints "`all`" Warning messages.
+- `-g`: generates additional symbolic debuggging information for use with `gdb` debugger.
+
+##### Compile and Link Separately
+
+The above command *compile* the source file into object file and `link` with other object files and system libraries into executable in one step. You may separate compile and link in two steps as follows:
+
+```cmd
+// Compile-only with -c option
+> g++ -c -Wall -g Hello.cpp
+// Link object file(s) into an executable
+> g++ -g -o Hello.exe Hello.o
+```
+
+The options are:
+
+- `-c`: Compile into object file "`Hello.o`". By default, the object file has the same name as the source file with extension of "`.o`" (there is no need to specify `-o` option). No linking with other object files or libraries.
+- Linking is performed when the input file are object files "`.o`" (instead of source file "`.cpp`" or "`.c`"). GCC uses a separate linker program (called `ld.exe`) to perform the linking.
+
+##### Compile and Link Multiple Source Files
+
+Suppose that your program has two source files: `hello.cpp.cpp`, `box.cpp`.
+
+```c++
+// hello.cpp
+#include <iostream>
+#include "box.h"
+using namespace std;
+ 
+int main() {
+   cout << "Hello, world!" << endl;
+   Box box(1,1,1);
+   cout << box.getVolume() << endl;
+   return 0;
+}
+```
+
+```c++
+// Box.h
+
+#ifndef BOX_H_
+#define BOX_H_
+
+class Box {
+public:
+    // 构造函数
+    Box(double length, double width, double height);
+    // 析构函数
+    ~Box();
+    // 计算体积
+    double getVolume() const;
+private:
+    double length; // 长度
+    double width;  // 宽度
+    double height; // 高度
+};
+
+#endif // BOX_H_
+```
+
+```c++
+//box.cpp
+
+#include "box.h"
+#include <iostream>
+using namespace std;
+// 构造函数
+Box::Box(double len, double wid, double hei) : length(len), width(wid), height(hei) {
+    // 可以在构造函数中添加初始化代码
+}
+
+// 析构函数
+Box::~Box() {
+    cout<<"The box is being destroyed.";
+}
+
+// 计算体积
+double Box::getVolume() const {
+    return length * width * height;
+}
+```
+
+ You could compile all of them in a single command:
+
+```cmd
+> g++ -o myprog.exe file1.cpp file2.cpp 
+```
+
+However, we usually compile each of the source files separately into object file, and link them together in the later stage. In this case, changes in one file does not require re-compilation of the other files.
+
+```
+> g++ -c Box.cpp
+> g++ -c hello.cpp
+> g++ -o hello.exe Box.o hello.o
+```
+
+#####  
+
+
+
+
+
+
 
 # CMake 
 

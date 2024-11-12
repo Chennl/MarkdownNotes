@@ -298,15 +298,15 @@ private:
 
 #### 6.5 Class Diagram
 
-<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104134038014.png" alt="image-20241104134038014" style="zoom: 50%;" />
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104134038014.png" alt="image-20241104134038014" style="zoom: 33%;" />
 
 #### 6.6 Implementation ClockDisplay 
 
 
 
-<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104134723597.png" alt="image-20241104134723597" style="zoom:50%;" />
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104134723597.png" alt="image-20241104134723597" style="zoom: 33%;" />
 
-<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104134828530.png" alt="image-20241104134828530" style="zoom:50%;" />
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104134828530.png" alt="image-20241104134828530" style="zoom: 33%;" />
 
 
 
@@ -560,3 +560,959 @@ delete [] psome;
 - The presence of the brackets tells the program that it should free the whole
   array, not just the element 
   Example:arraynew.cpp
+
+#### 11.3 The new-delete mech.
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104213643116.png" alt="image-20241104213643116" style="zoom:50%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241104213850545.png" alt="image-20241104213850545" style="zoom:67%;" />
+
+
+
+​		区别：
+
+​		delete r;    析构函数只调用一个，但空间都释放了
+
+​		delete[] r;  析构函数都调用一个，空间也都释放了
+
+```C++
+#include <iostream>
+using namespace std;
+class A
+{
+    private:
+        int i;
+
+    public:
+        A()
+        {
+            i = 0;
+            cout << "A::A()" << endl;
+        }
+        ~A()
+        {
+            cout << "A::~A(),i=" << i << endl;
+        }
+        void set(int i)
+        {
+            this->i = i;
+        }
+        void f()
+        {
+            cout << "hello";
+        }
+};
+
+int main()
+{
+	A* p = new A[10];
+	for ( int i=0; i<10; i++ )
+		p[il.set(i);
+	delete []p;
+    // delete p;   
+	return 0;
+          }
+```
+
+
+
+#### 11.4 Tips for new and delete
+
+- Don't use **delete** to free memory that **new** didn't allocate
+- Don't use **delete** to free the same block of memory twice in succession.
+- Use **delete []** if you used **new []** to allocate an array
+- Use delete (no brackets) if you used new to allocate a single entity
+- lt's safe to apply **delete** to the null pointer (nothing happens)
+
+### 12. Setting limits
+
+- to keep the client programmer's hands off members they shouldn't touch.
+- to allow the library designer to change the internal workings of the structure without worrying about how it will affect the client programmer
+
+#### 12.1 C++ access control
+
+The members of a class can be cataloged, marked as:
+
+- public
+
+  **public** : means all member declarations that follow are available to everyone.
+
+- private
+
+  The **private** keyword means that **no one** can access that member except **inside function members** of that type.
+
+  
+
+  private 以对类来说的，不是对变量来说的，同一个类的不同对象(变量)，可以访问私有成员.
+
+  ![企业微信截图_17307832509539](C:\Users\chennl\AppData\Local\Temp\企业微信截图_17307832509539.png)
+
+  注意： **p->i** 可以被访问。
+
+  这些是在编译时刻检查，运行时刻没有限制
+
+- protected
+
+### 12.2 Friends
+
+- to explicitly grant access to a function that isn't a member of the structure
+
+- The class itself controls which code has access to its members.
+
+- Can declare a global function as a **friend**, as well as a member function of another class, or even an entire class, as a **friend**.
+
+  ```c++
+  //: C05:Friend.cpp
+  // From Thinking in C++, 2nd Edition
+  // Available at http://www.BruceEckel.com
+  // (c) Bruce Eckel 2000
+  // Copyright notice in Copyright.txt
+  // Friend allows special access
+  // Declaration (incomplete type specification)
+  struct X;
+  struct Y {
+  void f(X*);
+  }
+  struct X  // Definition
+      private:
+          int i;
+      public:
+      void initialize();
+          friend void g(x*，int); // Global friend
+          friend void Y::f(X*); // Struct member friend
+          friend struct Z; // Entire struct is a friend
+          friend void h();
+  }
+  
+  void X::initialize() {
+  	i=0;
+  }
+  void g(X* x, int i) {
+  	X->i = i;
+  }
+  void Y::f(xX* x) {
+  	x->i = 47;
+  }
+  ```
+
+  
+
+  
+
+  ### 13. Initializer list
+
+  
+
+  ```c++
+  class Point {
+      private:
+          const float x,y;
+          Point(float xa = 0.0, float ya = 0.0):y(ya)，x(xa){
+              
+          }
+  };
+  ```
+
+- Can initialize any type of data
+
+  - pseudo-constructor calls for built-ins
+  - No need to perform assignment within body of ctor
+
+- Order of initialization is order of declaration
+
+  - Not the order in the list!
+  -  Destroyed in the reverse order.
+
+  #### 13.1 lnitialization vs.assignment
+
+  ````c++
+  Student::Student(string s):name(s){ }
+  // initialization
+  // before constructor
+      
+  Student::Student(string s)
+  {name=s;}
+  
+  //assignment
+  // inside constructor
+  // string must have a default constructor
+  ````
+
+  
+
+  ### 14. Reusing the implementation
+
+  - Composition: construct new object with existing  objects
+  - lt is the relationship of“has-a'
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241105215641936.png" alt="image-20241105215641936" style="zoom:50%;" />
+
+  
+
+  Objects can be used to build up other objects
+
+- Ways of inclusion:
+
+  - Fuly		//定义对象
+  - By reference     //指针形式
+
+- Inclusion by reference allows sharing
+
+  For an example:
+
+  Employee has a
+
+  -Name
+
+  -Address
+  -Health Plan
+
+  -Salary History
+  	Collection of Raise objects
+
+  -Supervisor
+   Another Employee object!
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241105220720394.png" alt="image-20241105220720394" style="zoom:50%;" />
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241105220841098.png" alt="image-20241105220841098" style="zoom: 50%;" />
+
+  
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241105221105680.png" alt="image-20241105221105680" style="zoom:50%;" />
+
+#### 14.2 Embedded objects
+
+- All embedded objects are initialized
+
+  - The default constructor is called if
+  you don't supply the arguments, and there is a default
+  constructor (or one can be built)
+
+- Constructors can have initialization list
+
+  - any number of objects separated by commas
+  - is optional
+  - Provide arguments to sub-constructors
+
+- Syntax:
+
+  name( args ) [ ':' init-list ] '{' 
+
+#### 14.3 Question
+
+- lf we wrote the constructor as (assuming we have the set accessors for the subobjects):
+
+``` c++
+class SavingsAccount {
+public:
+	Person m saver;
+    ...
+}  //assume Person class has set_name()
+
+SavingsAccount::SavingsAccount ( const char* name
+const char* address, int cents ) {
+    m saver.set_name( name );
+    m saver.set_address( address );
+    m balance.set_cents( cents );
+}
+```
+
+- Default constructors would be called;
+
+
+
+#### 14.4 Public Vs.Private
+
+- lt is common to make embedded objects private:
+
+  - they are part of the underlying implementation
+  - the new class only has part of the public interface of the old class
+
+- Can embed as a public object if you want to have the entire public interface of the subobject available in the new object:
+
+  ```c++
+  class SavingsAccount {
+  public:
+  	Person m saver;
+      ...
+  }  //assume Person class has set name()
+  SavingsAccount  account;
+  account.m saver.set name("Fred" ); //这样违反 OPP鸡蛋模型
+  ```
+
+  
+
+
+### 15.  Reusing the interface
+
+- Inheritance is to take the existing class, clone it. and then make additions and modifications to the clone.
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241106104754002.png" alt="image-20241106104754002" style="zoom: 67%;" />
+
+#### 15.1 Inheritance
+
+- Language implementation technique
+
+- Also an important component of the OO design methodology
+
+- Allows sharing of design for
+  -Member data
+  -Member functions
+  -**Interfaces** 
+
+- Key technology in C++
+
+- The ability to define the behavior or implementation of one class as a **superset** of
+  another class
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241106105641482.png" alt="image-20241106105641482" style="zoom:50%;" />
+
+<img src="D:\SwirebevUser\chennl\AppData\Roaming\Typora\typora-user-images\image-20241106143927315.png" alt="image-20241106143927315" style="zoom:50%;" />
+
+#### 15.2 public private and protected
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241106161115989.png" alt="image-20241106161115989" style="zoom:50%;" />
+
+private: 子类不能使用, 外部不能使用
+
+protected: 自己和子类内部可以访问，外部不能使用
+
+```c++
+#include <iostream>
+using namespace std;
+
+
+class A
+{
+    private:
+        int i;
+    protected:
+    	int a;
+ 
+    	
+    public:
+        A():i(0){
+            cout << "A::A()" << endl;
+        }
+        ~A(){
+            cout << "A::~A(),i=" << i << endl;
+        }
+        void print(){
+            cout << "A::print(),i=" << i << endl;
+        }
+    protected:
+        void set(int ii){
+            this->i =ii;
+        }
+    private:
+    	void msg(){
+            cout <<"hello";
+        }
+};
+class B: public A{
+    public:
+        void f(){
+            //protected 子类可以访问 
+                set(20);  
+            //private 子类不能访问
+            //error: 'void A::msg()' is private within this context
+               msg();
+            
+ 			//private 子类不能访问
+          	 // error: 'int A::i' is private within this context
+            // note: declared private here
+              i=30;
+            // protected 子类可以访问
+              b=20;
+              print();
+
+            }
+};
+ 
+int main(){
+
+    B b;
+    b.print();
+ 	b.f();
+    
+    //protected 外部不能访问
+    //error: 'void A::msg()' is private within this context
+    b.set(100);
+    
+	//private 子类不能访问
+    //error: 'void A::msg()' is private within this context
+    b.msg();
+    
+    
+
+
+    return 0;
+}
+
+```
+
+
+
+
+
+若在 A::set() 变成 protected, 则：
+
+```c++
+    protected:
+        void set(int ii){
+            this->i =ii;
+        }
+//则：
+int main(){
+    B b;
+    // private, protected 外部不能访问
+   // error: 'void A::set(int)' is protected within this context
+    b.set(100);
+    b.msg();
+
+        
+    b.print();
+    b.f();
+    return 0;
+}
+```
+
+
+
+#### 15.4 Declare an Employee class
+
+```C++
+class Employee {
+    public:
+        Employee( const std::string& namer, const std::string& ssn );
+        const std::string& get_name () const;
+ 
+        void print(std::ostream&  out) const;
+        void print(std::ostream&  out, const  std::string& msg) const;
+    protected:
+        std::string m name;
+        std::string m ssn;
+};
+//2. Constructor for Employee
+Employee::Employee( const string& name, const string& ssn ):name(name),ssn(ssn){
+// initializer list sets up the values!
+}
+
+//3. Employee member functions
+inline const std::string& Employee::get name() const{
+return m name;
+}
+inline void Employee::print( std::ostream& out )const {
+    out << m_name << endl;
+    out << m_ssn << endl;
+}
+inline void Employee::print(std::ostream& out, const,std::string& msg) const {
+    out << msg << endl;
+    print(out);//调用已有代码， 避免代码 code duplicate
+}
+
+// 4. Now add Manager
+class Manager : public Employee {
+    public:
+    	Manager(const std::string& name,const std::string& ssn,
+    			const std::string& title);
+        const std::string title_name() const;
+        const std::string& get_title() const;
+        void print(std::ostream& out) const;  //和Employee  print(out)一样，那会怎么样？
+    private:
+    	std::string m title;//扩展属性
+}
+```
+
+#### 15.5 Inheritance and constructors
+
+- Think of inherited traits as an embedded object
+
+- Base class is mentioned by class name
+
+  ```c++
+  Manager::Manager( const string& name， const string&
+  ssn, const string& title = "" ):Employee(name, ssn), m title( title ){
+      
+  }
+  ```
+
+  先 父类A  constructors()  , 然后 子类B  constructors（）
+
+  先 子类B  destory()  , 然后 父类A destory（）
+
+ ```c
+ A::A() 15 0    
+ B::B()
+ B::~B()        
+ A::~A(),i=20 
+ ```
+
+#### 15.6 Manager member functions
+
+```C++
+inline void Manager::print( std;:ostream& out ) const {
+    Employee::print( out );    //call the base class print
+    out << m_title << endl;
+}
+inline const std::string& Manager::get_title() const{
+	return m_title;
+}
+inline const std::string Manager::title_name() const{
+return string(m_title +":"+m_name );//access base m_name
+}
+```
+
+
+
+#### 15.7 Use
+
+```c++
+int main (){
+
+	Employee bob("Bob Jones"，"555-44-0000");
+	Manager bill("Bill Smith"，"666-55-1234"，"Important Person");
+	string name = bill.get_name();// okay Manager inherits Employee
+	//string title = bob.get title();    // Error -- bob is an Employee!
+	cout << bill.title_name() <<  "\n" << endl;
+	bill.print(cout);
+	bob.print(cout);
+	bob.print(cout,"Employee:");
+	//bill.print(cout，"Employee:");// Error hidden!
+  }
+```
+
+C++特别：  子类中有同名的 函数， 则父类中同名函数就被隐藏掉
+
+### 16.Function overloading
+
+- Same functions with different arguments list.
+  ```C++
+  void print(char *str, int width); // #1
+  void print(double d，int width); // #2
+  void print(long l，int width); // #3
+  void print(int i, int width); //#4
+  void print(char *str);// #5
+  print("Pancakes"，15);
+  print("Syrup");
+  print(1999.0，10);
+  print(1899L 15);
+  ```
+
+  
+
+#### 16.1 Overload and auto-cast
+```C++
+void f(short i);
+void f(double d);
+f('a');
+f(2);
+f(2L);
+f(3.2);
+```
+
+#### 16.2 Default arguments
+
+- A default argument is a value given in the declaration that the compiler automatically
+  inserts if you don't provide a value in the function call.
+
+```C++
+Stash(int size, int initQuantity = 0);
+```
+
+#### 16.3
+
+- To define a function with an argument list, defaults must be added from right to left.
+
+  ```C++
+  int harpo(int n, int m = 4,int j= 5);
+  int chico(int n,int m = 6,int j);//illeagle
+  int groucho(int k = 1,int m = 2,int n = 3);
+  beeps = harpo(2);
+  beeps = harpo(1,8);
+  beeps = harpo(8,7,6):
+  ```
+
+  默认参数数值写在 .h文件中，不能写在 .cpp中。默认值在编译阶段，在编译时，编译器自动补上 参数.
+
+  不建议使用default value, 会被恶意修改
+
+
+
+### 17.内联函数
+
+#### 17.1 Overhead for a function call
+
+- the processing time required by a device prior to the execution of a command
+  - Push parameters
+  - Push return address
+  - Prepare return values
+  - Pop all pushed
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241107111912428.png" alt="image-20241107111912428" style="zoom:50%;" />
+
+
+
+#### 17.2 Inline Functions
+
+- An inline function is expanded in place, like a preprocessor macro, so the overhead of the
+  function call is eliminated.
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241107112511802.png" alt="image-20241107112511802" style="zoom:50%;" />
+
+
+
+```c++
+inline int plusOne(int x);
+inline int plusOne(int x) freturn ++x; };
+```
+
+- Repeat **inline** keyword at declaration and definition.
+- An inline function definition may not generate any code in .obj file.
+
+可执行代码中没有这个函数， 这个函数被替换程代码
+
+#### 17.4 Inline functions in header file
+
+- So you can put inline functions' bodies in header file.Then #include it where the function is needed
+- Never be afraid of multi-definition of inline functions, since they have no body at all.
+- Definitions of inline functions are just declarations.
+
+```C++
+//a.h
+#include <iostream>
+using namespace std;
+inline void f()
+{     cout<< " inline.h"<<endl; }
+
+// main.cpp
+#include "inline.h"
+ 
+int main(){
+    f();
+}
+
+
+// main.i
+...
+# 2 "inline.h" 2
+
+# 2 "inline.h"
+using namespace std;
+inline void f()
+{ cout<< " inline.h"<<endl; }
+# 2 "inline.cpp" 2
+
+int main(){
+    f();
+}
+
+```
+
+对于 inline function 只要 a.h ，不需要a.cpp
+
+#### 17.4  Tradeoff of inline functions
+
+- Body of the called function is to be inserted into the caller.
+- This may expand the code size but deduces the overhead of calling time.
+- So it gains speed at the expenses of space.
+- In most cases,it is worth
+- lt is much better than macro in C.lt checks the types of the parameters.
+
+空间换时间  
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241107195018672.png" alt="image-20241107195018672" style="zoom:50%;" />
+
+
+
+#### 17.5 Inline may not in-line
+
+- The compiler does not have to honor your request to make a function inline. lt might decide the function is too large or notice that it calls itself (recursion is not allowed or indeed possible for inline functions), or the feature might not be implemented for your particular compiler.
+
+#### 17.6 Inline inside classes
+
+- Any function you define inside a class declaration is automatically an inline.
+
+  ```c++
+  #include <string>
+  using namespace std;
+  class Point {
+      int i, j, k;
+      public:
+      Point() { i=j=k=0;I
+      Point(int ii, int jj, int kk) { i=ii,j=jj,k=kk;}
+      void print(string& msg = "") {
+          if(msg.size() != 0)  cout << msg << endl;
+          cout <<"i =" "<< endl;
+      }
+  int main() {
+  	Point p，q(1,2,3);
+  }
+  ```
+
+#### 17.6 Access functions
+
+- They are small functions that allow you to read or change part of the state of an object - that is, an
+  internal variable or variables.
+
+  ```c++
+  class Cup {
+      int color;
+      public:
+     	 int getColor() { return color; }
+      void setColor(int color) {   	 
+     	 this->color =color;
+      }
+  ```
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241107195923032.png" alt="image-20241107195923032" style="zoom:50%;" />
+
+这样，代码又在 .h文件，又不在class { }内， 这样，保持.cpp样式， 成员函数清晰可见。
+
+
+
+#### 17.7 Inline or not?
+
+- Inline:
+  - Small functions,2 or 3 lines
+  - Frequently called functions, e.g. inside loops
+- Not inline?
+  - Very large functions, more than 20 lines
+  - Recursive functions
+
+
+
+### 18 Constant Objects
+
+- What if an object is const?
+
+  ```C++   
+   const Currency the_raise(42，38);
+  ```
+
+- What members can access the internals?
+- How can the object be protected from change?
+
+#### 18.1 Const member functions
+
+```c++
+int Date::set day(int d){
+    //...error check d here...
+    // ok, non-const so can modify 
+    day=d;
+}
+int Date::get day() const {
+	day++;  //ERROR modifies data  member
+
+	set_day(12); // ERROR calls non-const  member
+
+	return day;  // ok /64
+}
+```
+
+#### 18.2 Const member function usage
+
+- Repeat the const keyword in the definition as well as the declaration
+  int get day () const;
+  int get day() const { return day };
+- Function members that do not modify data should be declared const
+- const member functions are safe for const  objects
+
+const 实际是 给 this这个指针的
+
+```c++
+#include <iostream>
+using namespace std;
+class Date{
+    int day;
+    public:
+        Date():day(1){};
+        void set_day(int d) const;
+        int get_day() const;
+		//以下 f()可以重载吗 overload?为什么？ 
+        void f(){cout << " f() "<< endl;};  //实际上是 f(Date * this){....}
+        void f()const{cout << " f() const"<< endl;} //实际上是 f(const Date *this){...}
+};
+void Date::set_day(int d) const{
+   // day=d;  //Error
+}
+
+int Date::get_day() const{
+  //  day++;  //error
+    set_day(12);
+    return day;
+}
+
+int main(){
+    Date d;
+    d.f();  //打印输出是什么？f() 
+    const Date b;
+    b.f(); //打印输出是什么？f() const
+    return 0;
+}
+```
+
+
+
+#### 18.5 Constant Data menber in class
+
+```c++
+class A{
+	const int i;
+    public:
+        A():i(0){//i 只能通过初始化列表初始化
+
+        }
+}
+int main(){
+    A a;  //Error : error: uninitialized const member in 'class A'; 'const int A::i' should be initialized
+    A a(1);  //    error: assignment of read-only member 'A::i'
+
+}
+```
+
+- Has to be initialized in **initializer list** of the  constructor
+
+#### 18.6 Compile-time constants in classes
+
+```c++
+class HasArray {
+	const int size;
+	int array[sizel; // ERROR!
+          ...
+  	};
+          
+```
+
+- Make the const value static:
+  ```c++
+  static const int size = 100;
+  ```
+
+  **static** indicates **only one per class** (not one per object)
+
+- Or use anonymous enum"hack
+
+  ```c++
+  class HasArray{
+     
+      enum  { size = 100 };
+      int array[size]; // OK!
+      ...
+  }
+  ```
+
+  
+
+
+
+### 21 Declaring references 引用
+
+- References are a new data type in C++
+
+  ```c++
+  - char c; 			//a character 
+  - char* p = &c; 	// a pointer to a character
+  - char& r = c;	 	// a reference to a character
+  ```
+
+  
+
+- Local or global variables
+
+​		 - type& refname = name
+
+​		- For ordinary variables, the initial value is required
+
+  -  In parameter lists and member variables
+
+​	- type& refname
+
+​	- Binding defined by caller or constructor
+
+#### 21.2 References
+- Declares a new name for an existing object
+
+```c++
+int  X = 47;
+int& Y = X; // Y is a reference to X
+// X and Y now refer to the same variable
+cout <<" Y= "  << y; // prints Y = 47
+Y=18;
+cout <<" X= "  << x;  // prints X = 18
+```
+
+#### 21.3 Rules of references
+
+- References must be initialized when defined
+
+- Initialization establishes a binding
+
+  ```c++
+  - In declaration
+  int x = 3;
+  int& y = x;
+  const int& z = x;  //不能通过修改z 修改x; 但可以修改 x, 则z也改变了
+  - As a function argument
+  void f( int& x );
+  f(y); // initialized when function is called
+  ```
+
+- Bindings don't change at run time, unlike pointers
+
+  ```c++
+  int& y = x;
+  y = 12; // Changes value of x
+  ```
+
+- Assignment changes the object referred-to
+
+```C++
+void func(int &);
+func (i * 3);  // Warning or error!
+```
+
+
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241107221332254.png" alt="image-20241107221332254" style="zoom:67%;" />
+
+#### 21.5 Rules of references
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241107221704566.png" alt="image-20241107221704566" style="zoom:67%;" />
+
+#### 21.6 Restrictions
+
+- No references to references
+
+- No pointers to references
+  ```c++
+  int&* p;  //illegal
+  ```
+
+- Reference to pointer is ok
+  void f(int*& p);
+- No arrays of references
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Reference: 
+
+- [C++ More Basics](https://www3.ntu.edu.sg/home/ehchua/programming/cpp/cp2_MoreBasics.html)
+- 
