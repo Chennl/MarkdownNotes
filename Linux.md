@@ -182,7 +182,7 @@ docker 官网安装文档: https://docs.docker.com/engine/install/centos/
 >    CentOS Linux release 7.9.2009 (Core)
 >    yum -y install gcc
 >    yum -y install gcc-c++
->                                              
+>                                                       
 >    ````
 >
 >    2.官网安装步骤：
@@ -197,7 +197,7 @@ docker 官网安装文档: https://docs.docker.com/engine/install/centos/
 >                      docker-latest-logrotate \
 >                      docker-logrotate \
 >                      docker-engine
->                                                                
+>                                                                         
 >    yum install -y yum-utils
 >    
 >    
@@ -395,6 +395,10 @@ NTP synchronized: yes
 ##2.2
 [root@master ~]# date -R
 Thu, 22 Dec 2022 18:24:12 +0800
+
+##2.3 设置日期时间
+[root@master ~]# date -s '2025-03-31 20:15:18'
+ 
 
 ##3. 设置正确时区
 [root@master ~]# timedatectl set-timezone Asia/Shanghai
@@ -715,4 +719,6 @@ kill -9 pid
 
 [root@nodeone ~]#  tail -n 200 -f dpe_partner_all.log | perl -pe 's/(关键词)/\e[1;31m$1\e[0m/g'
 ```
+
+
 

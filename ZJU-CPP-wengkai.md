@@ -188,12 +188,12 @@ a.print()
 - \<Class Name>::\<function name>
 - ::\<function name>
 
-void S::fC) {
+void S::f( ) {
 	::f(); 	// Would be recursive otherwise!
 	::a++; 	// Select the global a
-	a--; 	// The a at class scope
+	a =a- 1; 	// The a at class scope
 
-
+}
 
 ### 5.头文件
 
@@ -273,7 +273,7 @@ private:
 
 ![image-20241104132806914](D:\SwirebevUser\chennl\AppData\Roaming\Typora\typora-user-images\image-20241104132806914.png)
 
-用c ++实现时钟。 用C写面向过程程序很简单。  但， 我们c++OOP思想去实现，关注什么东西，不关注过程是怎么样的。
+用c ++实现时钟。 用C写面向过程程序很简单。  但， 我们c++ OOP思想去实现，关注什么东西，不关注过程是怎么样的。
 
 #### 6.1 Abstract
 
@@ -654,6 +654,51 @@ The members of a class can be cataloged, marked as:
 - protected
 
 ### 12.2 Friends
+
+
+
+什么是**友元函数**   -- 朋友函数
+在C++中，友元函数是一种特殊的函数，它被声明为一个类的友元(friend)，允许该函数访问、修改类的私有成员。
+
+友元函数的声明通常放在**类**的声明中，但并**不属于**类的**成员函数**。
+
+一个类，指定了某一个函数 是自己的朋友，那么这个朋友就有权访问这个类里面的机密数据了。好东西只有好朋友才能享用
+
+![image-20241205214609054](D:\OfficeSpace\MarkdownNotes\assets\image-20241205214609054.png)
+
+- 1.2.友元类
+  除了友元函数，C++还支持友元类。友元类是指一个类的成员函数可以访问另一个类的私有成员
+
+
+
+友元函数提供了在需要访问类的私有成员时的一种灵活机制，但应**慎重使用**，因为过多的友元可能**破坏**封装性和类
+的独立性。
+
+2友元函数的特点和注意事项
+2.1**友元函数不是类的成员函数**
+友元函数不是成员函数，也就是说他不是类的成员，而只是拥有了类的通行许可证。如果，强制在类的内
+部进行定义了友元函数，编译器会把他变成内联函数来看待
+也就是说:强调友元函数的独立性，不受类的成员函数的约束。虽然友元函数可以访问类的私有成员，但
+它不是类的一部分，也没有隐式的 this 指针，因此在语法和概念上与成员函数有所不同
+
+2.2友元关系不具有传递性
+如果A是B的友元，B是C的友元，那并不意味着A是C的友元。
+友元，不但存在友元函数也存在友元类
+
+2.3，友元关系是单向的
+如果A是B的友元，不一定意味着B是A的友元
+
+2.4，友元函数可以是全局函数或其他类的成员函数
+不仅可以将非成员函数声明为类的友元，还可以将其他类的成员函数声明为友元。 这个就是说:
+两个类可以共同拥有一个友元函数。
+
+
+
+2.5友元函数的声明位置
+友元函数的声明通常放在类的 public、 private或protected 部分中。这是为友元关系不受访问控制符
+的限制，它是在类的声明中建立的。
+
+
 
 - to explicitly grant access to a function that isn't a member of the structure
 
@@ -1496,6 +1541,103 @@ func (i * 3);  // Warning or error!
 
 
 
+### 多态性
+
+![image-20241125194123919](D:\OfficeSpace\MarkdownNotes\assets\image-20241125194123919.png)
+
+
+
+![](D:\OfficeSpace\MarkdownNotes\assets\image-20241125194451865.png)
+
+
+
+```C++
+Shape
+Define the general properties of a Shape
+class XYPos{...}; // x,Y point
+class Shape {
+public:
+    Shape ();
+    virtual ~Shape();
+    virtual void render();
+    void move(const XYPos&);
+    virtual void resize();
+protected:
+	XYPos center;
+};
+```
+
+#### 23.2 Add new shapes
+
+~~~c++
+class Ellipse : public Shape {
+    public:
+    	Ellipse(float maj, float minr);
+    	virtual void render(); // will define own
+    protected:
+    	float major_axis, minor_axis;
+}
+class Circle : public Ellipse {
+    public:
+    	Circle(float radius) : Ellipse(radius, radius){}
+    	virtual void render();
+}
+~~~
+
+
+
+#### 23.3 Sample
+
+```c++
+
+void render(Shape *p) {
+	p->render(); // calls correct render function for given Shape!
+}
+void func() {
+    
+    Ellipse ell(10，20);
+    ell.render();
+    
+    Circle circ(40);
+    circ.render();
+    
+    render(&ell);
+    
+    render(&circ);
+}
+```
+
+
+
+### 23.4 Polymorphism 多态性
+
+
+
+ 以上例子什么是多态的？这里 P是多态的， shape中 定义 p->render() 时，是不知道 后续会有什么具体形状的子类的，只有再执行时才知道是，Ellipse 的render(), retangle的render(),  circle的render() . 所以，p是多态的。
+
+- **Upcast**: take an obiect of the derived class as an object of the base one.
+
+  - Ellipse can be treated as a Shape
+
+- **Dynamic binding**
+
+  - Binding: which function to be called
+
+    - Static binding: call the function as the code  编译时就绑定哪个函数， move()是没有virtaul, 是静态绑定
+
+    - Dynamic binding:  call the function of the object 
+
+      virtual 的是 地址指向具体对象时，动态绑定函数
+
+#### 24.4 How virtual works in C++
+
+
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\企业微信截图_17325377401835.png" alt="企业微信截图_17325377401835" style="zoom: 67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125205312239.png" alt="image-20241125205312239" style="zoom:67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125221143320.png" alt="image-20241125221143320" style="zoom:67%;" />
 
 
 
@@ -1503,16 +1645,509 @@ func (i * 3);  // Warning or error!
 
 
 
+<img src="D:\SwirebevUser\chennl\AppData\Roaming\Typora\typora-user-images\image-20241125221325540.png" alt="image-20241125221325540" style="zoom:67%;" />
+
+#### 24.5 what happens if
+
+
+
+```C++
+Ellipse elly(20F， 40F);
+Circle circ(60F);
+elly= circ; //10 in 5?
+```
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125223134706.png" alt="image-20241125223134706" style="zoom:67%;" />
 
 
 
 
 
+<img src="D:\SwirebevUser\chennl\AppData\Roaming\Typora\typora-user-images\image-20241125223312058.png" alt="image-20241125223312058" style="zoom:67%;" />
 
+
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125223427978.png" alt="image-20241125223427978" style="zoom:50%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125224251616.png" alt="image-20241125224251616" style="zoom:50%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125230032430.png" alt="image-20241125230032430" style="zoom: 67%;" />
+
+![image-20241125231636073](D:\OfficeSpace\MarkdownNotes\assets\image-20241125231636073.png)
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241125231758613.png" alt="image-20241125231758613" style="zoom:67%;" />
+
+![image-20241125231954241](D:\OfficeSpace\MarkdownNotes\assets\image-20241125231954241.png)
+
+#### 24.6 References as class members
+
+- Declared without initial value
+- Must be initialized using constructor initializer list
+
+```c++
+class X {
+public:
+	int& m_y;
+	X(int& a);
+	X::X(int& a) : m_y(a) { }; //必须使用初始化列表
+};
+```
+
+#### 24.7 Returning references
+
+- Functions can return references
+  -But they better refer to **non-local** variables!
+
+  ```c++
+  #include <assert.h>
+  const int SIZE = 32;
+  double myarray[SIZE];
+  double& subscript(const int i) {
+      return myarray[il;  //与指针类似， 但不能是函数的本地变量的reference
+    }
+  
+     int main(){
+         for(int i=0;i<SIZE;i++){
+             myarray[i] = i * 0.5;
+         }
+         double value = subsripts(12);
+         subsripts(3) =34.5;   // 34.5 赋值给返回的哪个变量
+     }
+                     
+                     
+  ```
+  
+
+#### 24.5 const in Functions Arguments
+
+- Pass by const value -- don't do it
+
+- Passing by const reference
+Person( **const string&** name, int weight );
+
+- don't change the string object
+
+- more efficient to pass by **reference** (**address**) than to pass by **value** (copy)
+
+- const qualifier protects from change 
+
+  所以，在c++中传对象参数 时使用  引用，这样不会复制对象 提高效率。
+
+  若不想被修改，使用 const &作为参数
+
+
+
+#### 24.6 Temporary values are const
+
+- What you type
+
+```c++
+
+void func(int &);
+func (i * 3); // Generates warning or error !
+```
+
+- What the compiler generates
+
+```C++
+void func(int &);
+const int tmp@ = i * 3;
+func(tmp@); // Problem -- binding const ref to non-const argument!
+```
+
+The temporary is constant, since you can't access it
+
+### 26. Copy 拷贝构造
+
+#### 26.1 Copying
+
+- Create a new object from an existing one
+  -For example, when calling a function
+
+  ```c++
+  // Currency as pass-by-value argument
+  void func(Currency p) {
+  cout <<"x="<< p.dollars();
+  }
+  ...
+  Currency bucks(100， 0);
+  func(bucks); // bucks is copied into p
+  ```
+
+  
+
+初始化 和赋值在c中一样，但在 c++完全不一样。
+
+
+
+Current p =bucks;  //初始化
+
+p = bucks;//赋值
+
+
+
+![企业微信截图_1732630232608](D:\OfficeSpace\MarkdownNotes\assets\企业微信截图_1732630232608.png)
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241126221552253.png" alt="image-20241126221552253" style="zoom:67%;" />
+
+
+
+![image-20241126222908494](D:\SwirebevUser\chennl\AppData\Roaming\Typora\typora-user-images\image-20241126222908494.png)
+
+ h2=f(h);
+
+h2=h; 没有经过构造函数，但经过析构函数
+
+![image-20241126223832111](D:\OfficeSpace\MarkdownNotes\assets\image-20241126223832111.png)
 
 
 
 ## Reference: 
 
 - [C++ More Basics](https://www3.ntu.edu.sg/home/ehchua/programming/cpp/cp2_MoreBasics.html)
-- 
+
+
+
+## C语言补充
+
+### 1.函数原型
+
+#### 1.1 函数的先后关系
+
+![image-20241127214201422](D:\OfficeSpace\MarkdownNotes\assets\image-20241127214201422.png)
+
+![image-20241127215932139](D:\OfficeSpace\MarkdownNotes\assets\image-20241127215932139.png)
+
+![image-20241127220055725](D:\OfficeSpace\MarkdownNotes\assets\image-20241127220055725.png)
+
+
+
+![image-20241127220641430](D:\OfficeSpace\MarkdownNotes\assets\image-20241127221410889.png)
+
+类型不匹配?
+
+调用函数时给的值与参数的类型不匹配是C语言传统上最大的洞
+编译器总是悄悄替你把类型转换好，但是这很可能不是你所期望的后续的语言，C++/Java在这方面很严格
+
+#### 运算符 &
+
+获取变量的地址。它的操作数是变量。
+
+```c
+int i = 0; 
+printf("0x%x\n", &i);
+printf("%p\n",&i);//输出地址
+```
+
+#### scanf
+- 如果能够将取得的变量的地址传递给一个函数
+- 能否通过这个地址在那个函数内访问这个变量?
+  scanf(“%d”,&i)
+- scanf()的原型应该是怎样的? 我们需要一个参数能保存别的变量的地址，如何表达能够保存地址
+
+#### 访问那个地址上的变量
+
+*是一个单目运算符，用来访问指针的值所表示的地址上的变量
+。可以做右值也可以做左值
+·int k=*p;
+。*p=k+1;
+
+#### 指针应用场景一
+- 交换两个变量的值
+
+  ```c
+  void swap(int *pa,int *pb){
+  int t = *pa;
+  *pa = *pb;
+  *pb = t;
+  }
+  ```
+
+#### 指针应用场景二
+- 函数返回**多个值**，某些值就只能通过指针返回
+- 传入的参数实际上是需要保存带回的结果的变量
+
+```C
+#include <stdio.h>
+void minmax(int a[], int len, int *max, int *min);
+int main(void){
+    int a[] = {1,2,3,4,5, 6,7,8,9,12,13,14,16,17,21, 23, 55,};
+    int min,max;
+    minmax(a，sizeof(a)/sizeof(a[0])，&min，&max);
+    printf("min=%d,max=%d\n"，min，max);
+    return 0;
+  }
+//找到最大值 和最小值
+void minmax(int a[],int len,int *min,int *max){
+    int i;
+    *min = *max=a[0];
+    for ( i=l; i<len; i++ ){
+        if (a[i] <*min ){
+         *min = a[i];
+        }
+        if ( a[i] >*max){
+            *max = a[i];
+        }
+      }
+ }
+```
+
+
+
+#### 指针应用场景二b
+
+函数返回运算的状态，结果通过指针返回
+常用的套路是让函数返回特殊的不属于有效范围内的值来表示出错
+
+- ·-1或0(在文件操作会看到大量的例子)
+- 但是当任何数值都是有效的可能结果时，就得分开返回了
+
+```c
+#include <stdio.n>
+/*
+@return 如果除法成功，返回1;否则,返回0
+*/
+int divide(int a,int b, int *result);
+int main(void){
+    int a=5;
+    int b=2;
+    int c;
+    if ( divide(a,b,&c) ) {
+    	printf("%d/%d=%d\n"，a，b，c);
+    return 0;
+    }
+int divide(int a, int b,int *result){
+    int ret = 1;
+    if ( b == @ ) 
+        ret = 0;
+    else {
+    	*result = a/b;
+    }
+    return ret;
+}
+
+```
+
+#### 指针最常见的错误
+
+- 定义了指针变量，还没有指向任何变量，就开始使用指针
+
+#### 传入函数的数组成了什么?
+
+```c
+#include <stdio.h>
+void minmax(int a[], int len, int *max, int *min);
+int main(void){
+    int a[] = {1,2,3,4,5, 6,7,8,9,12,13,14,16,17,21, 23, 55,};
+    int min,max;
+    minmax(a，sizeof(a)/sizeof(a[0])，&min，&max);
+    printf("min=%d,max=%d\n"，min，max);
+    return 0;
+  }
+//找到最大值 和最小值
+void minmax(int a[],int len,int *min,int *max){
+    int i;
+    *min = *max=a[0];
+    for ( i=l; i<len; i++ ){
+        if (a[i] <*min ){
+         *min = a[i];
+        }
+        if ( a[i] >*max){
+            *max = a[i];
+        }
+      }
+ }
+```
+
+#### 数组参数
+
+```c
+以下四种函数原型是等价的:
+int sum(int *ar, int n);
+int sum(int*, int);
+int sum(int ar[], int n):
+int sum(int [], int);
+```
+
+#### 数组变量是特殊的指针
+
+```C
+//数组变量本身表达地址，所以
+int a[10];int*p=a: // 无需用&取地址
+//但是数组的单元表达的是变量，需要用&取地址
+ a==&a[0]
+// []运算符可以对数组做，也可以对指针做
+p[0] <==> a[0]
+```
+
+
+
+### 26.Static in C++
+
+Two basic meanings:
+
+- Static storage
+  -allocated once at a fixed address
+- Visibility of a name
+  -internal linkage
+- Don't use static except inside functions and classes.
+
+#### 26.1 Uses of“static”in C++
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241202221251298.png" alt="image-20241202221251298" style="zoom:67%;" />
+
+### 30 运算符重载 Overloading Operators
+
+- Allows user-defined types to act like built in types
+- Another way to make a function call
+- Unary and binary operators can be overloaded
+   ![企业微信截图_17331489175847](D:\OfficeSpace\MarkdownNotes\assets\企业微信截图_17331489175847.png)
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241202221722551.png" alt="image-20241202221722551" style="zoom:67%;" />
+
+#### 30.1 Restrictions
+
+- Only existing operators can be overloaded (you can't create a ** operator for exponentiation)
+- Operators must be overloaded on a class or enumeration type
+- Overloaded operators must -Preserve number of operands
+  -Preserve precedence
+
+#### 30.2 C++ overloaded operator
+
+- Just a function with an operator name!
+  -Use the **operator** keyword as a prefix to name 
+
+  **operator** *(...)
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241202222354828.png" alt="image-20241202222354828" style="zoom:67%;" />
+
+  #### 30.3 How to overload
+
+- As member function
+  -Implicit first argument
+  -No type conversion performed on receiver
+  -Must have access to class definition
+
+  #### 30.4 Operators as member functions
+
+  ```c++
+  class Integer {
+  	public:
+      Integer( int n = 0 ) : i(n) {}
+      const Integer operator+(const Integer& n) const{
+      return Integer(i + n.i);
+          ...
+      private:
+      int i;
+  }
+  ```
+
+  #### 30.5 Member Functions
+
+  ```c++
+  Integer x(1)，y(5)，z;
+  x + y;   // => x.operator+(y) ;
+  ```
+
+- lmplicit first argument
+
+- Developer must have access to class definition
+
+- Members have full access to all data in class
+
+- No type conversion performed on receiver
+
+  ```c++
+  Z=X+y   //0k X是receiver
+  Z=X+3	//ok X是receiver
+  z=3 +y	// err 编译通不过   3是receiver
+  Z=X+3.5	//err
+  ```
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241202224335944.png" alt="image-20241202224335944" style="zoom:67%;" />
+
+  #### 30.5 Operator as a global function
+
+  ```c++
+  const Integer operator+(
+  const Integer& rhs,
+  const Integer& lhs);
+  Integer x， y;
+  x + y  // ====> operator+(x，y);
+  ```
+
+- Explicit first argument
+
+- Developer does not need special access to classes
+
+- May need to be a friend
+
+- Type conversions performed on both arguments
+
+  #### 30.6 Global Operators
+
+  - binary operators require two arguments
+
+  - unary operators require one argument
+    conversion:
+
+    ```c++
+    z= x + y;
+    Z=x+3;
+    z=3+y;
+    z=3+7;
+    ```
+
+    lf you don't have access to private data members, then the global function must use
+    the public interface (e.g. accessors)
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241202225042429.png" alt="image-20241202225042429" style="zoom:67%;" />
+
+
+
+#### 30.7 Argument Passing
+
+- if it is read-only pass it in as a const reference except built-ins)
+- make member functions const that don't change the class (boolean operators, +, -, etc)
+- for global functions, if the left-hand side changes pass as a reference (assignment operators)
+
+#### 30.8 Return values
+
+- Select the return type depending on theexpected meaning of the operator. For
+  example
+  -For operator+ you need to generate a new object. Return as a const object so the result cannot be modified as an lvalue.
+  -Logical operators should return bool (or int for older
+  compilers)
+
+  #### 30.9 The prototypies of operators
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203125400009.png" alt="image-20241203125400009" style="zoom:67%;" />
+
+  <img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203125546232.png" alt="image-20241203125546232" style="zoom:67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203125728329.png" alt="image-20241203125728329" style="zoom:67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203125857082.png" alt="image-20241203125857082" style="zoom:67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203125931057.png" alt="image-20241203125931057" style="zoom:67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203130049286.png" alt="image-20241203130049286" style="zoom:67%;" />
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203130219312.png" alt="image-20241203130219312" style="zoom:67%;" />
+
+
+
+<img src="D:\OfficeSpace\MarkdownNotes\assets\image-20241203130315327.png" alt="image-20241203130315327" style="zoom:67%;" />
+
+#### 30.12 Value classes
+
+- Appear to be primitive data types
+- Passed to and returned from functions
+- ·Have overloaded operators (often)
+- Can be converted to and from other types
+- ·Examples: Complex, Date, String
+
+
+
+[第08课【 C++运算符重载】运算符重载，特殊重载，operator隐式转换，[\]和()重载_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV19u4y117Ge/?spm_id_from=333.337.search-card.all.click&vd_source=265631a940f0c085c9ceec6d0254cd21)
+
