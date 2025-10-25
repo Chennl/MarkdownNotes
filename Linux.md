@@ -182,7 +182,7 @@ docker 官网安装文档: https://docs.docker.com/engine/install/centos/
 >    CentOS Linux release 7.9.2009 (Core)
 >    yum -y install gcc
 >    yum -y install gcc-c++
->                                                       
+>                                                          
 >    ````
 >
 >    2.官网安装步骤：
@@ -197,7 +197,7 @@ docker 官网安装文档: https://docs.docker.com/engine/install/centos/
 >                      docker-latest-logrotate \
 >                      docker-logrotate \
 >                      docker-engine
->                                                                         
+>                                                                            
 >    yum install -y yum-utils
 >    
 >    
@@ -524,10 +524,27 @@ https://blog.csdn.net/y2020520/article/details/131177497
 #useradd 用户名   会自动创建与用户同名的家目录，在/home/ 下面
 [root@master ~]# useradd chennl
 
+##1.1 此时用户还没有密码，不能登录Linux
+
+[sudo] password for chennl:
+chennl is not in the sudoers file.
+
+## 1.2 使用sudo配置， 直接修改 sudoers 文件
+[root@Tomhost chennl]# visudo
+###若需单独为 chennl 授权，在文件末尾添加：
+chennl  ALL=(ALL)       ALL
+
 ## 2、查询用户
 #id 用户名       uid:用户id； gid:用户所在组id；groups:组名
 [root@master ~]# id chennl
 uid=1000(chennl) gid=1000(chennl) groups=1000(chennl)
+###切换回chennl,验证
+[chennl@Tomhost ~]$ su chennl
+Password:
+[chennl@Tomhost ~]$ sudo ls /root
+[sudo] password for chennl:
+anaconda-ks.cfg  devcode  nodejscode
+
 
 ##3.1 修改/指定用户密码
 [root@master ~]# passwd chennl
@@ -565,11 +582,23 @@ Password:
 ### 7.2 用户组
 
 ```shell
+# 0、查看用户组   cat /etc/group
+[root@Tomhost nodeexpress]# cat /etc/group
+root:x:0:
+bin:x:1:
+daemon:x:2:
+sys:x:3:
+adm:x:4:
+tty:x:5:
+disk:x:6:
+
+
 # 1、增加组    groupadd 组名
 
 # 2、修改组 usermod –g 新的组名 用户名
 
 # 3、删除组 groupdel 组名  // 这个组没有用户，才能删除
+
 ```
 
 
@@ -588,6 +617,20 @@ Password:
 组(group)的配置文件，记录 Linux 包含的组的信息，
 
 每行含义：组名:口令:组标识号:组内用户列表
+
+```sh
+#查看用户所在用户组
+[root@Tomhost nodeexpress]# groups chennl
+chennl : chennl
+# 添加当前用户到docker组（避免每次使用sudo）
+[chennl@Tomhost ~]$ sudo usermod -aG docker $USER
+[chennl@Tomhost ~]$ groups chennl
+chennl : chennl docker
+
+
+```
+
+
 
 
 

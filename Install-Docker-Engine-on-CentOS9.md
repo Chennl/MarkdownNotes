@@ -56,13 +56,17 @@ sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 3.  daemon
 
    ```shell
-    tee /etc/docker/daemon.json <<-'EOF' 
+   $ vim /etc/docker/daemon.json  
     { "registry-mirrors": ["https://docker-0.unsee.tech",
     	"https://docker-cf.registry.cyou",
     	"https://docker.1panel.live",
     	"https://wghxbdr9.mirror.aliyuncs.com"]
     	}
-    	EOF
+   $$
+   [root@Tomhost ~]# systemctl daemon-reload
+   [root@Tomhost ~]# systemctl restart docker
+   [root@Tomhost ~]# docker info
+   
    ```
    
    
@@ -70,9 +74,7 @@ sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 3.  Verify that the installation is successful by running the `hello-world` image:
 
    ```shell
-   
-    	
-    	sudo docker run hello-world
+   [root@Tomhost ~]# sudo docker run hello-world
    ```
    
    
