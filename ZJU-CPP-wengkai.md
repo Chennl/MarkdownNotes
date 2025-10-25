@@ -655,6 +655,7 @@ The members of a class can be cataloged, marked as:
 
 ### 12.2 Friends
 
+<<<<<<< HEAD
 
 
 什么是**友元函数**   -- 朋友函数
@@ -700,6 +701,8 @@ The members of a class can be cataloged, marked as:
 
 
 
+=======
+>>>>>>> 2d306f190c2d4a59a28fb92f4e52e57ecfa47cdd
 - to explicitly grant access to a function that isn't a member of the structure
 
 - The class itself controls which code has access to its members.
@@ -1541,6 +1544,7 @@ func (i * 3);  // Warning or error!
 
 
 
+<<<<<<< HEAD
 ### 多态性
 
 ![image-20241125194123919](D:\OfficeSpace\MarkdownNotes\assets\image-20241125194123919.png)
@@ -1799,12 +1803,28 @@ p = bucks;//赋值
 h2=h; 没有经过构造函数，但经过析构函数
 
 ![image-20241126223832111](D:\OfficeSpace\MarkdownNotes\assets\image-20241126223832111.png)
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 2d306f190c2d4a59a28fb92f4e52e57ecfa47cdd
 
 
 
 ## Reference: 
 
 - [C++ More Basics](https://www3.ntu.edu.sg/home/ehchua/programming/cpp/cp2_MoreBasics.html)
+<<<<<<< HEAD
 
 
 
@@ -2151,3 +2171,6 @@ Two basic meanings:
 
 [第08课【 C++运算符重载】运算符重载，特殊重载，operator隐式转换，[\]和()重载_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV19u4y117Ge/?spm_id_from=333.337.search-card.all.click&vd_source=265631a940f0c085c9ceec6d0254cd21)
 
+=======
+- 
+>>>>>>> 2d306f190c2d4a59a28fb92f4e52e57ecfa47cdd
