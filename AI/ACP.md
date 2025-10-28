@@ -3,7 +3,11 @@
 
 ## 1.大模型是如何工作的
 
-![image-20250921195839295](D:\SwirebevUser\chennl\AppData\Roaming\Typora\typora-user-images\image-20250921195839295.png)
+
+
+
+
+![image-20250921195839295](.\assets\image-20250921195839295-1761643939157-3.png)
 
 ### 2.1. 大模型的问答工作流程
 
